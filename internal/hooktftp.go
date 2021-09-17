@@ -7,30 +7,36 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/user"
 	"syscall"
 	"time"
 
-	"github.com/tftp-go-team/hooktftp/internal/config"
-	"github.com/tftp-go-team/hooktftp/internal/hooks"
-	"github.com/tftp-go-team/hooktftp/internal/logger"
-	tftp "github.com/tftp-go-team/libgotftp/src"
+	"github.com/fooxlj07/hooktftp/internal/config"
+	"github.com/fooxlj07/hooktftp/internal/hooks"
+	"github.com/fooxlj07/hooktftp/internal/logger"
+	tftp "github.com/fooxlj07/libgotftp/src"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 const (
 	CONFIG_ERROR = 1
-	HOOK_ERROR = 2
-	NET_ERROR = 3
-	SYS_ERROR = 4
+	HOOK_ERROR   = 2
+	NET_ERROR    = 3
+	SYS_ERROR    = 4
 )
 
 var HOOKS []hooks.Hook
 var CONFIG_PATH string = "/etc/hooktftp.yml"
 
-func handleRRQ(res *tftp.RRQresponse) {
-
+func handleRRQ(res *tftp.RRQresponse, metricCollector *tftp.MetricCollector) {
+	metricCollector.RequestCount.Inc()
 	started := time.Now()
+
+	timer := prometheus.NewTimer(metricCollector.RequestDuration)
+	defer timer.ObserveDuration()
 
 	path := res.Request.Path
 
@@ -162,7 +168,6 @@ func handleRRQ(res *tftp.RRQresponse) {
 }
 
 func HookTFTP() int {
-
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "\nUsage: %s [-v] [config]\n", os.Args[0])
 	}
@@ -241,7 +246,8 @@ func HookTFTP() int {
 	if conf.User == "" && syscall.Getuid() == 0 {
 		logger.Warning("Running as root and 'user' is not set in %s", CONFIG_PATH)
 	}
-
+	metricCollector := tftp.NewMetricCollector()
+	exposeMetrics()
 	for {
 		res, err := server.Accept()
 		if err != nil {
@@ -249,11 +255,15 @@ func HookTFTP() int {
 			continue
 		}
 
-		go handleRRQ(res)
+		go handleRRQ(res, metricCollector)
 	}
 
 	logger.Close()
 
 	return 0
+}
 
+func exposeMetrics() {
+	http.Handle("/metrics", promhttp.Handler())
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

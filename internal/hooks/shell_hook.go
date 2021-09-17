@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"regexp"
 
+	"github.com/fooxlj07/hooktftp/internal/config"
+	tftp "github.com/fooxlj07/libgotftp/src"
 	"github.com/google/shlex"
-	"github.com/tftp-go-team/hooktftp/internal/config"
-	tftp "github.com/tftp-go-team/libgotftp/src"
 )
 
 // Borrowed from Ruby
