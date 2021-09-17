@@ -6,8 +6,8 @@ RUN apt-get update \
 
 VOLUME /var/lib/tftpboot
 
-COPY . /go/src/github.com/tftp-go-team/hooktftp
-WORKDIR /go/src/github.com/tftp-go-team/hooktftp
+COPY . /app
+WORKDIR /app
 
 RUN make build
 
@@ -19,4 +19,4 @@ hooks:\n\
       regexp: ^.*$\n\
       template: /var/lib/tftpboot/$0' > /etc/hooktftp.yml
 
-CMD ./hooktftp -v
+ENTRYPOINT ["/app/hooktftp"]

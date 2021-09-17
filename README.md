@@ -129,7 +129,7 @@ The easiest way to start hacking with hooktftp is to use Docker.
 
 ```
 # Clone the repository
-[host]> git clone git@github.com:tftp-go-team/hooktftp.git
+[host]> git clone git@github.com:fooxlj07/hooktftp.git
 [host]> cd hooktftp
 
 # Create the configuration file. Edit this file later to change hooktftp configuration.
@@ -139,11 +139,11 @@ The easiest way to start hacking with hooktftp is to use Docker.
 [host]> docker run --rm -ti \
     --name tftp-server \
     -v /tmp/hooktftp.yml:/etc/hooktftp.yml:ro \
-    -v `pwd`:/go/src/github.com/tftp-go-team/hooktftp \
+    -v `pwd`:/go/src/github.com/fooxlj07/hooktftp \
     golang
 
 # From the container, run hooktftp
-[container]> cd src/github.com/tftp-go-team/hooktftp/
+[container]> cd src/github.com/fooxlj07/hooktftp/
 [container]> make
 [container]> ./src/hooktftp -v
 

@@ -1,0 +1,10 @@
+port: 69
+user: nobody
+hooks:
+  - type: http
+    regexp: (ipxe.efi$)|(undionly.kpxe$)
+    template: http://172.17.0.2:7091/boot/$1
+
+  - type: file
+    regexp: ^.*$
+    template: /var/lib/tftpboot/$0

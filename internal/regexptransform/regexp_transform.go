@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/tftp-go-team/hooktftp/internal/config"
+	"github.com/fooxlj07/hooktftp/internal/config"
 )
 
 var NO_MATCH = errors.New("No match")

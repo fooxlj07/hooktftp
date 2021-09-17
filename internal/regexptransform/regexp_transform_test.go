@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/tftp-go-team/hooktftp/internal/config"
+	"github.com/fooxlj07/hooktftp/internal/config"
 )
 
 func dummyEscape(s string, extraArgs config.HookExtraArgs) (string, error) {

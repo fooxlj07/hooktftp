@@ -6,11 +6,11 @@ import (
 	"io"
 	"regexp"
 
-	"github.com/tftp-go-team/hooktftp/internal/config"
-	"github.com/tftp-go-team/hooktftp/internal/logger"
-	"github.com/tftp-go-team/hooktftp/internal/regexptransform"
+	"github.com/fooxlj07/hooktftp/internal/config"
+	"github.com/fooxlj07/hooktftp/internal/logger"
+	"github.com/fooxlj07/hooktftp/internal/regexptransform"
 
-	tftp "github.com/tftp-go-team/libgotftp/src"
+	tftp "github.com/fooxlj07/libgotftp/src"
 )
 
 var NO_MATCH = regexptransform.NO_MATCH
