@@ -247,7 +247,7 @@ func HookTFTP() int {
 		logger.Warning("Running as root and 'user' is not set in %s", CONFIG_PATH)
 	}
 	metricCollector := tftp.NewMetricCollector()
-	exposeMetrics()
+	go exposeMetrics()
 	for {
 		res, err := server.Accept()
 		if err != nil {
@@ -265,5 +265,8 @@ func HookTFTP() int {
 
 func exposeMetrics() {
 	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	logger.Info("Listen and serve for metrics")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		logger.Crit("fail to listen and serve metrics", err)
+	}
 }
